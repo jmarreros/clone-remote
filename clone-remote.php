@@ -16,63 +16,66 @@ namespace dcms\cloneremote;
 
 use dcms\cloneremote\includes\Plugin;
 use dcms\cloneremote\includes\Submenu;
+use dcms\cloneremote\includes\Metabox;
+use dcms\cloneremote\includes\Enqueue;
+use dcms\cloneremote\includes\Process;
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
  * Plugin class to handle settings constants and loading files
  **/
-final class Loader
-{
+final class Loader {
 
 	// Define all the constants we need
-	public function define_constants()
-	{
-		define('DCMS_CLONE_VERSION', '1.0');
-		define('DCMS_CLONE_PATH', plugin_dir_path(__FILE__));
-		define('DCMS_CLONE_URL', plugin_dir_url(__FILE__));
-		define('DCMS_CLONE_BASE_NAME', plugin_basename(__FILE__));
-		define('DCMS_CLONE_SUBMENU', 'tools.php');
+	public function define_constants():void {
+		define( 'DCMS_CLONE_VERSION', '1.0' );
+		define( 'DCMS_CLONE_PATH', plugin_dir_path( __FILE__ ) );
+		define( 'DCMS_CLONE_URL', plugin_dir_url( __FILE__ ) );
+		define( 'DCMS_CLONE_BASE_NAME', plugin_basename( __FILE__ ) );
+		define( 'DCMS_CLONE_SUBMENU', 'tools.php' );
 	}
 
 	// Load all the files we need
-	public function load_includes()
-	{
-		include_once(DCMS_CLONE_PATH . '/helpers/helper.php');
-		include_once(DCMS_CLONE_PATH . '/includes/plugin.php');
-		include_once(DCMS_CLONE_PATH . '/includes/submenu.php');
+	public function load_includes() :void{
+//		include_once( DCMS_CLONE_PATH . '/helpers/helper.php' );
+		include_once( DCMS_CLONE_PATH . '/includes/plugin.php' );
+		include_once( DCMS_CLONE_PATH . '/includes/submenu.php' );
+		include_once( DCMS_CLONE_PATH . '/includes/metabox.php' );
+		include_once( DCMS_CLONE_PATH . '/includes/enqueue.php' );
+		include_once( DCMS_CLONE_PATH . '/includes/process.php' );
 	}
 
 	// Load tex domain
-	public function load_domain()
-	{
-		add_action('plugins_loaded', function () {
-			$path_languages = dirname(DCMS_CLONE_BASE_NAME) . '/languages/';
-			load_plugin_textdomain('clone-remote', false, $path_languages);
-		});
+	public function load_domain():void {
+		add_action( 'plugins_loaded', function () {
+			$path_languages = dirname( DCMS_CLONE_BASE_NAME ) . '/languages/';
+			load_plugin_textdomain( 'clone-remote', false, $path_languages );
+		} );
 	}
 
 	// Add link to plugin list
-	public function add_link_plugin()
-	{
-		add_action('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
-			return array_merge(array(
-				'<a href="' . esc_url(admin_url(DCMS_CLONE_SUBMENU . '?page=clone-remote')) . '">' . __('Settings', 'clone-remote') . '</a>'
-			), $links);
-		});
+	public function add_link_plugin():void {
+		add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), function ( $links ) {
+			return array_merge( array(
+				'<a href="' . esc_url( admin_url( DCMS_CLONE_SUBMENU . '?page=clone-remote' ) ) . '">' . __( 'Settings', 'clone-remote' ) . '</a>'
+			), $links );
+		} );
 	}
 
 	// Initialize all
-	public function init()
-	{
+	public function init():void {
 		$this->define_constants();
 		$this->load_includes();
 		$this->load_domain();
 		$this->add_link_plugin();
 		new Plugin();
 		new SubMenu();
+		new Metabox();
+		new Enqueue();
+		new Process();
 	}
 }
 
