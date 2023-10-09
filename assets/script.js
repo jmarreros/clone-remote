@@ -9,7 +9,8 @@
             type: 'post',
             data: {
                 action : 'dcms_ajax_remote_content',
-                id_post: 123
+                nonce: dcms_clone_remote.nonce,
+                post_id: $('#current-id').val()
             },
             beforeSend: function(){
                 $('#clone-remote-message').html('Enviando ...');

@@ -25,7 +25,7 @@ class Enqueue {
 			'dcms_clone_remote',
 			[
 				'ajaxurl'    => admin_url( 'admin-ajax.php' ),
-				'dcms_clone_remote'    => wp_create_nonce( 'ajax-nonce-clone-remote' ),
+				'nonce'    => wp_create_nonce( 'ajax-nonce-clone-remote' ),
 				'sending'    => __( 'Enviando...', 'clone-remote' ),
 				'processing' => __( 'Procesando...', 'clone-remote' )
 			] );

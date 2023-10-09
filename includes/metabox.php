@@ -22,10 +22,23 @@ class Metabox {
 	}
 
 	public function clone_remote_box_html(): void {
-		?>
-        <button class="button primary-button" id="clone-remote-content" name="clone-remote-content">Clone content
-        </button>
-        <div style="margin-top:5px" id="clone-remote-message"></div>
+        global $post;
+
+		$post_id = $post->ID;
+        $status = $post->post_status;
+
+		if ( $post_id && $status === 'publish'):
+			?>
+            <button class="button primary-button" id="clone-remote-content" name="clone-remote-content">Clone remote
+                content
+            </button>
+            <input type="hidden" name="current-id" id="current-id" value="<?= $post_id ?>">
+            <div style="margin-top:5px" id="clone-remote-message"></div>
 		<?php
+		else :
+			?>
+            <div>Save the post before cloning remote content</div>
+		<?php
+		endif;
 	}
 }

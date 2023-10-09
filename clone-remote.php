@@ -36,6 +36,14 @@ final class Loader {
 		define( 'DCMS_CLONE_URL', plugin_dir_url( __FILE__ ) );
 		define( 'DCMS_CLONE_BASE_NAME', plugin_basename( __FILE__ ) );
 		define( 'DCMS_CLONE_SUBMENU', 'tools.php' );
+
+		// User and password for remote site
+		define( 'DCMS_REMOTE_URL' , 'http://decodecms2.local/wp-json/wp/v2/posts' );
+		define( 'DCMS_REMOTE_USER' , 'jmarreros');
+		define( 'DCMS_REMOTE_PASSWORD' , 'HYvI l1mF m9fU kYE8 oCKd k3YI');
+//		define( 'DCMS_REMOTE_URL' , 'https://decodecms.com/wp-json/wp/v2/posts' );
+//		define( 'DCMS_REMOTE_USER' , 'jmarreros');
+//		define( 'DCMS_REMOTE_PASSWORD' , 'hdpx OUbc OLMn ke4D 8sn7 ZnSH');
 	}
 
 	// Load all the files we need
