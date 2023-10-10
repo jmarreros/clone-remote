@@ -3,7 +3,7 @@
 Plugin Name: Clone Remote Content
 Plugin URI: https://decodecms.com
 Description: Clone remote content using API REST WordPress
-Version: 1.0
+Version: 1.1
 Author: Jhon Marreros Guzmán
 Author URI: https://decodecms.com
 Text Domain: clone-remote
