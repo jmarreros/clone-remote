@@ -18,7 +18,8 @@ class Process {
 		$this->validate_post_id( $post_id );
 		$this->validate_nonce( $nonce );
 
-		$post       = get_post( $post_id );
+		$post = get_post( $post_id );
+		$this->validate_duplicate_slug( $post->post_name );
 
 		$request = wp_remote_post(
 			DCMS_REMOTE_URL,
@@ -58,8 +59,9 @@ class Process {
 		);
 
 		if ( is_wp_error( $request_meta ) ) {
-			wp_send_json( [ 'status'  => 0,
-			                'message' => 'Error creating metadata ' . $request_meta->get_error_message()
+			wp_send_json( [
+				'status'  => 0,
+				'message' => 'Error creating metadata ' . $request_meta->get_error_message()
 			] );
 		}
 
@@ -84,14 +86,21 @@ class Process {
 		return $meta_data;
 	}
 
-	public function validate_duplicate_title($slug): void {
+	private function validate_duplicate_slug( $slug ): void {
+		$response = wp_remote_get( DCMS_REMOTE_SLUG . $slug );
 
-		$res = [
-			'status'  => 1,
-			'message' => 'OK'
-		];
+		if ( is_wp_error( $response ) ) {
+			$res = [ 'status' => 0, 'message' => '✋ Error remote site!! ' . $response->get_error_message() ];
+			wp_send_json( $res );
+		}
 
-		wp_send_json( $res );
+		$body = json_decode( $response['body'] );
+
+		if ( ! empty( $body ) ) {
+			$res = [ 'status' => 0, 'message' => '✋ Error duplicate slug article!' ];
+			wp_send_json( $res );
+		}
+
 	}
 
 	private function validate_nonce( $nonce ): void {

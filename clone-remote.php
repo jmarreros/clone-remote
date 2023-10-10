@@ -40,6 +40,7 @@ final class Loader {
 		// User and password for remote site
 		define( 'DCMS_REMOTE_URL' , 'http://decodecms2.local/wp-json/wp/v2/posts' );
 		define( 'DCMS_REMOTE_CUSTOM_ENDPOINT', 'http://decodecms2.local/wp-json/dcms-custom-meta/v1/add/');
+		define ( 'DCMS_REMOTE_SLUG', 'http://decodecms2.local/wp-json/wp/v2/posts/?slug=');
 		define( 'DCMS_REMOTE_USER' , 'jmarreros');
 		define( 'DCMS_REMOTE_PASSWORD' , 'HYvI l1mF m9fU kYE8 oCKd k3YI');
 //		define( 'DCMS_REMOTE_URL' , 'https://decodecms.com/wp-json/wp/v2/posts' );
