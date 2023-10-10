@@ -16,8 +16,7 @@
                 $('#clone-remote-message').html('Enviando ...');
             },
             success: function(res){
-                $('#clone-remote-message').html('Finalizado');
-                console.log(res)
+                $('#clone-remote-message').html(res.message);
             }
 
         });

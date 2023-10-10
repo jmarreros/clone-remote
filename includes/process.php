@@ -19,67 +19,58 @@ class Process {
 		$this->validate_nonce( $nonce );
 
 		$post       = get_post( $post_id );
-		$categories = wp_get_post_categories( $post_id, [ 'fields' => 'ids' ] );
-		$tags       = wp_get_post_tags( $post_id, [ 'fields' => 'ids' ] );
-		$meta_data  = $this->get_meta_data( $post_id );
-
-		$data = [
-			'title'      => $post->post_title,
-			'slug'       => $post->post_name,
-			'content'    => $post->post_content,
-			'author'     => 2,
-			'status'     => 'draft',
-			'categories' => $categories,
-			'tags'       => $tags,
-			'meta'       => $meta_data
-		];
-
-		error_log(print_r($data,true));
 
 		$request = wp_remote_post(
 			DCMS_REMOTE_URL,
-			array(
-				'headers' => array(
-					'Authorization' => 'Basic ' . base64_encode( "$login:$password" )
-				),
-				'body'    => $data
-			)
+			[
+				'headers' => [ 'Authorization' => 'Basic ' . base64_encode( "$login:$password" ) ],
+				'body'    => [
+					'title'      => $post->post_title,
+					'slug'       => $post->post_name,
+					'content'    => $post->post_content,
+					'author'     => 2,
+					'status'     => 'draft',
+					'categories' => wp_get_post_categories( $post_id, [ 'fields' => 'ids' ] ),
+					'tags'       => wp_get_post_tags( $post_id, [ 'fields' => 'ids' ] ),
+					'meta'       => $this->get_meta_data( $post_id )
+				]
+			]
 		);
 
-		$res = [
-			'status'  => 1,
-			'message' => 'OK'
-		];
+		$body = json_decode( wp_remote_retrieve_body( $request ) );
 
-		if( 'Created' !== wp_remote_retrieve_response_message( $request ) ) {
-			$body = json_decode( wp_remote_retrieve_body( $request ) );
-			$res = [
-				'status'  => 0,
-				'message' => $body->message
-			];
+		// Error creating post
+		if ( 'Created' !== wp_remote_retrieve_response_message( $request ) ) {
+			wp_send_json( [ 'status' => 0, 'message' => $body->message ] );
 		}
 
-		wp_send_json( $res );
-	}
+		// All right, then create custom post meta
+		$post_id_created = $body->id;
+		$request_meta    = wp_remote_post( DCMS_REMOTE_CUSTOM_ENDPOINT,
+			[
+				'body' => [
+					'post_id'                   => $post_id_created,
+					'genesis_custom_post_class' => get_post_meta( $post_id, '_genesis_custom_post_class', true ),
+					'dcms_eufi_img'             => get_post_meta( $post_id, '_dcms_eufi_img', true ),
+					'dcms_eufi_alt'             => get_post_meta( $post_id, '_dcms_eufi_alt', true ),
+				]
+			]
+		);
 
-//	public function search_remote_content(): void {
-//
-//		$res = [
-//			'status'  => 1,
-//			'message' => 'OK'
-//		];
-//
-//		wp_send_json( $res );
-//	}
+		if ( is_wp_error( $request_meta ) ) {
+			wp_send_json( [ 'status'  => 0,
+			                'message' => 'Error creating metadata ' . $request_meta->get_error_message()
+			] );
+		}
+
+		wp_send_json( [ 'status' => 1, 'message' => 'Article created' ] );
+	}
 
 	private function get_meta_data( $post_id ): array {
 		$meta_custom = [
 			"Nivel",
 			"relacionados",
 			"youtube",
-//			"_genesis_custom_post_class",
-//			"_dcms_eufi_img",
-//			"_dcms_eufi_alt",
 		];
 
 		$meta_data = [];
@@ -93,6 +84,15 @@ class Process {
 		return $meta_data;
 	}
 
+	public function validate_duplicate_title($slug): void {
+
+		$res = [
+			'status'  => 1,
+			'message' => 'OK'
+		];
+
+		wp_send_json( $res );
+	}
 
 	private function validate_nonce( $nonce ): void {
 		if ( ! wp_verify_nonce( $nonce, 'ajax-nonce-clone-remote' ) ) {
