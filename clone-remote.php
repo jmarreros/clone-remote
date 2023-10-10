@@ -3,7 +3,7 @@
 Plugin Name: Clone Remote Content
 Plugin URI: https://decodecms.com
 Description: Clone remote content using API REST WordPress
-Version: 1.1
+Version: 1.2
 Author: Jhon Marreros Guzmán
 Author URI: https://decodecms.com
 Text Domain: clone-remote
@@ -14,8 +14,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
 namespace dcms\cloneremote;
 
-use dcms\cloneremote\includes\Plugin;
-use dcms\cloneremote\includes\Submenu;
 use dcms\cloneremote\includes\Metabox;
 use dcms\cloneremote\includes\Enqueue;
 use dcms\cloneremote\includes\Process;
@@ -43,16 +41,10 @@ final class Loader {
 		define ( 'DCMS_REMOTE_SLUG', 'http://decodecms2.local/wp-json/wp/v2/posts/?slug=');
 		define( 'DCMS_REMOTE_USER' , 'jmarreros');
 		define( 'DCMS_REMOTE_PASSWORD' , 'HYvI l1mF m9fU kYE8 oCKd k3YI');
-//		define( 'DCMS_REMOTE_URL' , 'https://decodecms.com/wp-json/wp/v2/posts' );
-//		define( 'DCMS_REMOTE_USER' , 'jmarreros');
-//		define( 'DCMS_REMOTE_PASSWORD' , 'hdpx OUbc OLMn ke4D 8sn7 ZnSH');
 	}
 
 	// Load all the files we need
 	public function load_includes() :void{
-//		include_once( DCMS_CLONE_PATH . '/helpers/helper.php' );
-		include_once( DCMS_CLONE_PATH . '/includes/plugin.php' );
-		include_once( DCMS_CLONE_PATH . '/includes/submenu.php' );
 		include_once( DCMS_CLONE_PATH . '/includes/metabox.php' );
 		include_once( DCMS_CLONE_PATH . '/includes/enqueue.php' );
 		include_once( DCMS_CLONE_PATH . '/includes/process.php' );
@@ -66,23 +58,12 @@ final class Loader {
 		} );
 	}
 
-	// Add link to plugin list
-	public function add_link_plugin():void {
-		add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), function ( $links ) {
-			return array_merge( array(
-				'<a href="' . esc_url( admin_url( DCMS_CLONE_SUBMENU . '?page=clone-remote' ) ) . '">' . __( 'Settings', 'clone-remote' ) . '</a>'
-			), $links );
-		} );
-	}
 
 	// Initialize all
 	public function init():void {
 		$this->define_constants();
 		$this->load_includes();
 		$this->load_domain();
-		$this->add_link_plugin();
-		new Plugin();
-		new SubMenu();
 		new Metabox();
 		new Enqueue();
 		new Process();
