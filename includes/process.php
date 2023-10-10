@@ -6,6 +6,7 @@ class Process {
 
 	public function __construct() {
 		add_action( 'wp_ajax_dcms_ajax_remote_content', [ $this, 'process_remote_content' ] );
+		add_filter( 'http_request_timeout', [ $this, 'change_default_time_out' ] );
 	}
 
 	public function process_remote_content(): void {
@@ -123,5 +124,7 @@ class Process {
 		}
 	}
 
-
+	public function change_default_time_out( $time ): int {
+		return 20;
+	}
 }

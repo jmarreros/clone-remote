@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Loader {
 
 	// Define all the constants we need
-	public function define_constants():void {
+	public function define_constants(): void {
 		define( 'DCMS_CLONE_VERSION', '1.0' );
 		define( 'DCMS_CLONE_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DCMS_CLONE_URL', plugin_dir_url( __FILE__ ) );
@@ -36,22 +36,22 @@ final class Loader {
 		define( 'DCMS_CLONE_SUBMENU', 'tools.php' );
 
 		// User and password for remote site
-		define( 'DCMS_REMOTE_URL' , 'http://decodecms2.local/wp-json/wp/v2/posts' );
-		define( 'DCMS_REMOTE_CUSTOM_ENDPOINT', 'http://decodecms2.local/wp-json/dcms-custom-meta/v1/add/');
-		define ( 'DCMS_REMOTE_SLUG', 'http://decodecms2.local/wp-json/wp/v2/posts/?slug=');
-		define( 'DCMS_REMOTE_USER' , 'jmarreros');
-		define( 'DCMS_REMOTE_PASSWORD' , 'HYvI l1mF m9fU kYE8 oCKd k3YI');
+		define( 'DCMS_REMOTE_URL', 'http://decodecms2.local/wp-json/wp/v2/posts' );
+		define( 'DCMS_REMOTE_CUSTOM_ENDPOINT', 'http://decodecms2.local/wp-json/dcms-custom-meta/v1/add/' );
+		define( 'DCMS_REMOTE_SLUG', 'http://decodecms2.local/wp-json/wp/v2/posts/?slug=' );
+		define( 'DCMS_REMOTE_USER', 'jmarreros' );
+		define( 'DCMS_REMOTE_PASSWORD', 'HYvI l1mF m9fU kYE8 oCKd k3YI' );
 	}
 
 	// Load all the files we need
-	public function load_includes() :void{
+	public function load_includes(): void {
 		include_once( DCMS_CLONE_PATH . '/includes/metabox.php' );
 		include_once( DCMS_CLONE_PATH . '/includes/enqueue.php' );
 		include_once( DCMS_CLONE_PATH . '/includes/process.php' );
 	}
 
 	// Load tex domain
-	public function load_domain():void {
+	public function load_domain(): void {
 		add_action( 'plugins_loaded', function () {
 			$path_languages = dirname( DCMS_CLONE_BASE_NAME ) . '/languages/';
 			load_plugin_textdomain( 'clone-remote', false, $path_languages );
@@ -60,7 +60,7 @@ final class Loader {
 
 
 	// Initialize all
-	public function init():void {
+	public function init(): void {
 		$this->define_constants();
 		$this->load_includes();
 		$this->load_domain();

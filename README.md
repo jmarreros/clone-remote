@@ -7,8 +7,30 @@ Plugin to clone remote content using REST API WordPress
 define( 'WP_ENVIRONMENT_TYPE', 'local' );
 ```
 
-- For the remote site you need to create endpoint with the following code:
+- For remote site you have to register no private post meta
+```php
+add_action('rest_api_init', function () {
+    $metas = [
+        "Nivel",
+        "relacionados",
+        "youtube",
+    ];
 
+    foreach ($metas as $meta) {
+        register_meta(
+            'post',
+            $meta,
+            [
+                'type' => 'string',
+                'single' => true,
+                'show_in_rest' => true
+            ]
+        );
+    }
+});
+```
+
+- For the remote site you need to create endpoint with the following code for private custom post meta:
 
 ```php
 add_action('rest_api_init', 'dcms_register_custom_route');
